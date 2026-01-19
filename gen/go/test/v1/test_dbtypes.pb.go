@@ -49,6 +49,11 @@ func (x *ToolSetSpecValue) Unwrap() *ToolSetSpec {
 	return x.ProtoValue.Message
 }
 
+// DatabaseValue returns a database-compatible wrapper for this message.
+func (x *ToolSetSpec) DatabaseValue() *ToolSetSpecValue {
+	return NewToolSetSpecValue(x)
+}
+
 // UserPreferencesValue wraps *UserPreferences for database operations.
 type UserPreferencesValue struct {
 	*ProtoValue[*UserPreferences]
@@ -91,6 +96,11 @@ func (x *UserPreferencesValue) Unwrap() *UserPreferences {
 	return x.ProtoValue.Message
 }
 
+// DatabaseValue returns a database-compatible wrapper for this message.
+func (x *UserPreferences) DatabaseValue() *UserPreferencesValue {
+	return NewUserPreferencesValue(x)
+}
+
 // ContainerValue wraps *Container for database operations.
 type ContainerValue struct {
 	*ProtoValue[*Container]
@@ -131,4 +141,9 @@ func (x *ContainerValue) Unwrap() *Container {
 		return nil
 	}
 	return x.ProtoValue.Message
+}
+
+// DatabaseValue returns a database-compatible wrapper for this message.
+func (x *Container) DatabaseValue() *ContainerValue {
+	return NewContainerValue(x)
 }

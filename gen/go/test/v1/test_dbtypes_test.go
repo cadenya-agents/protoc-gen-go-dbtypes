@@ -233,3 +233,35 @@ func TestSecondMessageValue_RoundTrip(t *testing.T) {
 		t.Errorf("round-trip failed:\ngot:  %v\nwant: %v", wrapper2.Unwrap(), msg)
 	}
 }
+
+func TestDatabaseValue(t *testing.T) {
+	spec := &ToolSetSpec{
+		ToolIds: []string{"tool-1", "tool-2"},
+		Name:    "test-spec",
+		Enabled: true,
+	}
+
+	// Use DatabaseValue() to get a wrapper directly from the proto
+	wrapper := spec.DatabaseValue()
+
+	// Verify it works for database operations
+	dbVal, err := wrapper.Value()
+	if err != nil {
+		t.Fatalf("Value() error: %v", err)
+	}
+
+	// Scan into a new wrapper
+	wrapper2 := &ToolSetSpecValue{}
+	if err := wrapper2.Scan(dbVal); err != nil {
+		t.Fatalf("Scan() error: %v", err)
+	}
+
+	if !proto.Equal(spec, wrapper2.Unwrap()) {
+		t.Errorf("round-trip via DatabaseValue failed:\ngot:  %v\nwant: %v", wrapper2.Unwrap(), spec)
+	}
+
+	// Verify Unwrap returns the same pointer
+	if wrapper.Unwrap() != spec {
+		t.Error("DatabaseValue().Unwrap() should return the original message")
+	}
+}

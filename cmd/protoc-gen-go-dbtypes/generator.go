@@ -175,4 +175,11 @@ func generateMessageWrapper(g *protogen.GeneratedFile, m *protogen.Message) {
 	g.P("	return x.ProtoValue.Message")
 	g.P("}")
 	g.P()
+
+	// DatabaseValue method on the proto message
+	g.P("// DatabaseValue returns a database-compatible wrapper for this message.")
+	g.P("func (x *", typeName, ") DatabaseValue() *", wrapperName, " {")
+	g.P("	return New", wrapperName, "(x)")
+	g.P("}")
+	g.P()
 }

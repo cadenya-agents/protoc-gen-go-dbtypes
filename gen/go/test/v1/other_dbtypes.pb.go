@@ -83,6 +83,11 @@ func (x *AnotherMessageValue) Unwrap() *AnotherMessage {
 	return x.ProtoValue.Message
 }
 
+// DatabaseValue returns a database-compatible wrapper for this message.
+func (x *AnotherMessage) DatabaseValue() *AnotherMessageValue {
+	return NewAnotherMessageValue(x)
+}
+
 // SecondMessageValue wraps *SecondMessage for database operations.
 type SecondMessageValue struct {
 	*ProtoValue[*SecondMessage]
@@ -123,4 +128,9 @@ func (x *SecondMessageValue) Unwrap() *SecondMessage {
 		return nil
 	}
 	return x.ProtoValue.Message
+}
+
+// DatabaseValue returns a database-compatible wrapper for this message.
+func (x *SecondMessage) DatabaseValue() *SecondMessageValue {
+	return NewSecondMessageValue(x)
 }
