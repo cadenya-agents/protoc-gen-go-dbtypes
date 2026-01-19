@@ -73,6 +73,7 @@ protoc \
 |--------|-------------|
 | `paths=source_relative` | Generate files relative to the source proto file location |
 | `exclude=Name1,Name2` | Comma-separated list of message names to exclude from generation |
+| `package=example.v1` | Only generate for the specified proto package |
 
 The `exclude` option accepts both Go type names (e.g., `UserPreferences`) and full proto names (e.g., `example.v1.UserPreferences`).
 
@@ -87,6 +88,19 @@ plugins:
     opt:
       - paths=source_relative
       - exclude=InternalMessage,DebugInfo
+```
+
+Example filtering to a specific package:
+
+```yaml
+# buf.gen.yaml
+version: v2
+plugins:
+  - local: protoc-gen-go-dbtypes
+    out: gen/go
+    opt:
+      - paths=source_relative
+      - package=myapp.api.v1
 ```
 
 ## Generated Code

@@ -13,9 +13,15 @@ const (
 // GeneratorConfig holds configuration options for the generator.
 type GeneratorConfig struct {
 	ExcludedTypes map[string]bool
+	OnlyPackage   string
 }
 
 func generateFile(gen *protogen.Plugin, file *protogen.File, config *GeneratorConfig, generatedPackages map[protogen.GoImportPath]bool) error {
+	// Skip if package filter is set and doesn't match
+	if config.OnlyPackage != "" && string(file.Desc.Package()) != config.OnlyPackage {
+		return nil
+	}
+
 	// Filter messages that should have wrappers generated
 	var messages []*protogen.Message
 	for _, m := range file.Messages {
