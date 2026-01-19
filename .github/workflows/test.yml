@@ -1,0 +1,49 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.21', '1.22', '1.23']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Install buf
+        uses: bufbuild/buf-setup-action@v1
+
+      - name: Install protoc-gen-go
+        run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+
+      - name: Build plugin
+        run: go build -o protoc-gen-go-dbtypes ./cmd/protoc-gen-go-dbtypes
+
+      - name: Install plugin
+        run: go install ./cmd/protoc-gen-go-dbtypes
+
+      - name: Generate protobuf code
+        run: buf generate
+
+      - name: Run tests
+        run: go test -v -race ./...
+
+      - name: Verify generated code is up to date
+        run: |
+          git diff --exit-code gen/
+          if [ $? -ne 0 ]; then
+            echo "Generated code is out of date. Run 'buf generate' and commit the changes."
+            exit 1
+          fi

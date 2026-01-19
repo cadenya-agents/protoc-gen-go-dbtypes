@@ -1,0 +1,13 @@
+version: v2
+plugins:
+  # Standard Go protobuf generation
+  - local: protoc-gen-go
+    out: gen/go
+    opt:
+      - paths=source_relative
+
+  # DBTypes wrapper generation
+  - local: protoc-gen-go-dbtypes
+    out: gen/go
+    opt:
+      - paths=source_relative

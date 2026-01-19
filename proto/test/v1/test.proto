@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package test.v1;
+
+option go_package = "github.com/bobbytables/protoc-gen-go-dbtypes/gen/go/test/v1;testv1";
+
+// ToolSetSpec represents a set of tools configuration.
+message ToolSetSpec {
+  repeated string tool_ids = 1;
+  string name = 2;
+  bool enabled = 3;
+}
+
+// UserPreferences stores user-specific settings.
+message UserPreferences {
+  string theme = 1;
+  string language = 2;
+  map<string, string> settings = 3;
+}
+
+// Nested message example
+message Container {
+  string id = 1;
+  ToolSetSpec spec = 2;
+  repeated Item items = 3;
+
+  message Item {
+    string key = 1;
+    string value = 2;
+  }
+}
