@@ -185,3 +185,51 @@ func TestContainerValue_RoundTrip(t *testing.T) {
 		t.Errorf("round-trip failed:\ngot:  %v\nwant: %v", wrapper2.Unwrap(), container)
 	}
 }
+
+// Tests for types from other.proto to verify ProtoValue deduplication works
+
+func TestAnotherMessageValue_RoundTrip(t *testing.T) {
+	msg := &AnotherMessage{
+		Id:          "msg-123",
+		Description: "test description",
+	}
+
+	wrapper := NewAnotherMessageValue(msg)
+
+	dbVal, err := wrapper.Value()
+	if err != nil {
+		t.Fatalf("Value() error: %v", err)
+	}
+
+	wrapper2 := &AnotherMessageValue{}
+	if err := wrapper2.Scan(dbVal); err != nil {
+		t.Fatalf("Scan() error: %v", err)
+	}
+
+	if !proto.Equal(msg, wrapper2.Unwrap()) {
+		t.Errorf("round-trip failed:\ngot:  %v\nwant: %v", wrapper2.Unwrap(), msg)
+	}
+}
+
+func TestSecondMessageValue_RoundTrip(t *testing.T) {
+	msg := &SecondMessage{
+		Count:  42,
+		Active: true,
+	}
+
+	wrapper := NewSecondMessageValue(msg)
+
+	dbVal, err := wrapper.Value()
+	if err != nil {
+		t.Fatalf("Value() error: %v", err)
+	}
+
+	wrapper2 := &SecondMessageValue{}
+	if err := wrapper2.Scan(dbVal); err != nil {
+		t.Fatalf("Scan() error: %v", err)
+	}
+
+	if !proto.Equal(msg, wrapper2.Unwrap()) {
+		t.Errorf("round-trip failed:\ngot:  %v\nwant: %v", wrapper2.Unwrap(), msg)
+	}
+}

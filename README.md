@@ -67,6 +67,28 @@ protoc \
   proto/your/package/v1/messages.proto
 ```
 
+### Plugin Options
+
+| Option | Description |
+|--------|-------------|
+| `paths=source_relative` | Generate files relative to the source proto file location |
+| `exclude=Name1,Name2` | Comma-separated list of message names to exclude from generation |
+
+The `exclude` option accepts both Go type names (e.g., `UserPreferences`) and full proto names (e.g., `example.v1.UserPreferences`).
+
+Example with exclusions:
+
+```yaml
+# buf.gen.yaml
+version: v2
+plugins:
+  - local: protoc-gen-go-dbtypes
+    out: gen/go
+    opt:
+      - paths=source_relative
+      - exclude=InternalMessage,DebugInfo
+```
+
 ## Generated Code
 
 Given a protobuf message:

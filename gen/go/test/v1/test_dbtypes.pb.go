@@ -5,41 +5,7 @@ package testv1
 
 import (
 	driver "database/sql/driver"
-	fmt "fmt"
-	proto "google.golang.org/protobuf/proto"
 )
-
-// ProtoValue wraps a protobuf message for database scanning/valuing.
-type ProtoValue[T proto.Message] struct {
-	Message T
-}
-
-// Scan implements sql.Scanner.
-func (p *ProtoValue[T]) Scan(src any) error {
-	if src == nil {
-		return nil
-	}
-
-	var data []byte
-	switch v := src.(type) {
-	case []byte:
-		data = v
-	case string:
-		data = []byte(v)
-	default:
-		return fmt.Errorf("dbtypes: unsupported scan type: %T", src)
-	}
-
-	return proto.Unmarshal(data, p.Message)
-}
-
-// Value implements driver.Valuer.
-func (p *ProtoValue[T]) Value() (driver.Value, error) {
-	if any(p.Message) == nil {
-		return nil, nil
-	}
-	return proto.Marshal(p.Message)
-}
 
 // ToolSetSpecValue wraps *ToolSetSpec for database operations.
 type ToolSetSpecValue struct {

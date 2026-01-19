@@ -10,11 +10,16 @@ const (
 	fmtPackage    = protogen.GoImportPath("fmt")
 )
 
-func generateFile(gen *protogen.Plugin, file *protogen.File) error {
+// GeneratorConfig holds configuration options for the generator.
+type GeneratorConfig struct {
+	ExcludedTypes map[string]bool
+}
+
+func generateFile(gen *protogen.Plugin, file *protogen.File, config *GeneratorConfig, generatedPackages map[protogen.GoImportPath]bool) error {
 	// Filter messages that should have wrappers generated
 	var messages []*protogen.Message
 	for _, m := range file.Messages {
-		if shouldGenerateWrapper(m) {
+		if shouldGenerateWrapper(m, config) {
 			messages = append(messages, m)
 		}
 	}
@@ -27,7 +32,12 @@ func generateFile(gen *protogen.Plugin, file *protogen.File) error {
 	g := gen.NewGeneratedFile(filename, file.GoImportPath)
 
 	generateHeader(g, file)
-	generateProtoValueType(g)
+
+	// Only generate ProtoValue once per package
+	if !generatedPackages[file.GoImportPath] {
+		generateProtoValueType(g)
+		generatedPackages[file.GoImportPath] = true
+	}
 
 	// Generate wrapper for each message
 	for _, m := range messages {
@@ -37,13 +47,23 @@ func generateFile(gen *protogen.Plugin, file *protogen.File) error {
 	return nil
 }
 
-func shouldGenerateWrapper(m *protogen.Message) bool {
+func shouldGenerateWrapper(m *protogen.Message, config *GeneratorConfig) bool {
 	// Skip map entries
 	if m.Desc.IsMapEntry() {
 		return false
 	}
 
-	// Generate for all top-level messages
+	// Skip excluded types
+	if config.ExcludedTypes[m.GoIdent.GoName] {
+		return false
+	}
+
+	// Also check the full proto name (e.g., "test.v1.ToolSetSpec")
+	if config.ExcludedTypes[string(m.Desc.FullName())] {
+		return false
+	}
+
+	// Generate for all other messages
 	return true
 }
 

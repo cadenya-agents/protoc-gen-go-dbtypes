@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package test.v1;
+
+option go_package = "github.com/cadenya-agents/protoc-gen-go-dbtypes/gen/go/test/v1;testv1";
+
+// AnotherMessage is in a separate file to test ProtoValue deduplication.
+message AnotherMessage {
+  string id = 1;
+  string description = 2;
+}
+
+// SecondMessage also in this file.
+message SecondMessage {
+  int64 count = 1;
+  bool active = 2;
+}
