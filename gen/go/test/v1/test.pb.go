@@ -278,7 +278,7 @@ const file_test_v1_test_proto_rawDesc = "" +
 	"\x05items\x18\x03 \x03(\v2\x17.test.v1.Container.ItemR\x05items\x1a.\n" +
 	"\x04Item\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05valueBDZBgithub.com/bobbytables/protoc-gen-go-dbtypes/gen/go/test/v1;testv1b\x06proto3"
+	"\x05value\x18\x02 \x01(\tR\x05valueBGZEgithub.com/cadenya-agents/protoc-gen-go-dbtypes/gen/go/test/v1;testv1b\x06proto3"
 
 var (
 	file_test_v1_test_proto_rawDescOnce sync.Once

@@ -1,4 +1,4 @@
-module github.com/bobbytables/protoc-gen-go-protovalue
+module github.com/cadenya-agents/protoc-gen-go-dbtypes
 
 go 1.25.4
 

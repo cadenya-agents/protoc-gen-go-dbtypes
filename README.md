@@ -19,13 +19,13 @@ For each protobuf message, the plugin generates a `*Value` wrapper type (e.g., `
 ### Install the Plugin
 
 ```bash
-go install github.com/bobbytables/protoc-gen-go-dbtypes/cmd/protoc-gen-go-dbtypes@latest
+go install github.com/cadenya-agents/protoc-gen-go-dbtypes/cmd/protoc-gen-go-dbtypes@latest
 ```
 
 Or build from source:
 
 ```bash
-git clone https://github.com/bobbytables/protoc-gen-go-dbtypes.git
+git clone https://github.com/cadenya-agents/protoc-gen-go-dbtypes.git
 cd protoc-gen-go-dbtypes
 go install ./cmd/protoc-gen-go-dbtypes
 ```
@@ -332,39 +332,6 @@ err := wrapper.Scan(someValue)
 if err != nil {
     // Handle unmarshal error or unsupported type
     log.Printf("scan error: %v", err)
-}
-```
-
-## Testing
-
-The generated wrappers are tested with round-trip serialization:
-
-```go
-func TestRoundTrip(t *testing.T) {
-    original := &examplev1.ToolSetSpec{
-        ToolIds: []string{"tool-1", "tool-2"},
-        Name:    "test",
-        Enabled: true,
-    }
-
-    wrapper := examplev1.NewToolSetSpecValue(original)
-
-    // Simulate database storage
-    dbValue, err := wrapper.Value()
-    if err != nil {
-        t.Fatal(err)
-    }
-
-    // Simulate database retrieval
-    wrapper2 := &examplev1.ToolSetSpecValue{}
-    if err := wrapper2.Scan(dbValue); err != nil {
-        t.Fatal(err)
-    }
-
-    // Verify equality
-    if !proto.Equal(original, wrapper2.Unwrap()) {
-        t.Error("round-trip failed")
-    }
 }
 ```
 

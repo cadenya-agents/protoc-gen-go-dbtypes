@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package test.v1;
 
-option go_package = "github.com/bobbytables/protoc-gen-go-dbtypes/gen/go/test/v1;testv1";
+option go_package = "github.com/cadenya-agents/protoc-gen-go-dbtypes/gen/go/test/v1;testv1";
 
 // ToolSetSpec represents a set of tools configuration.
 message ToolSetSpec {
